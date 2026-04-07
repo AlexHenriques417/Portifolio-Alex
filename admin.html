@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin | Alex Henriques</title>
+  <link rel="stylesheet" href="css/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <style>
+    .admin-container {
+      max-width: 1200px;
+      margin: 100px auto 50px;
+      padding: 0 20px;
+    }
+    
+    .admin-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .admin-title {
+      font-family: 'Poppins', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--text);
+    }
+    
+    .logout-btn {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      color: var(--text-muted);
+      padding: 10px 20px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      transition: all 0.3s;
+    }
+    
+    .logout-btn:hover {
+      border-color: var(--accent3);
+      color: var(--accent3);
+    }
+    
+    .admin-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 30px;
+      margin-bottom: 30px;
+    }
+    
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    
+    .section-header h2 {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .edit-btn {
+      background: linear-gradient(135deg, var(--accent2), var(--accent));
+      border: none;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-family: 'Poppins', sans-serif;
+      font-size: 0.9rem;
+      transition: transform 0.2s;
+    }
+    
+    .edit-btn:hover {
+      transform: translateY(-2px);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+    
+    .form-group input,
+    .form-group textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 12px;
+      color: var(--text);
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    
+    .skill-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 8px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .skill-item button {
+      background: none;
+      border: none;
+      color: var(--accent3);
+      cursor: pointer;
+      font-size: 18px;
+    }
+    
+    .add-btn {
+      background: transparent;
+      border: 1px dashed var(--accent);
+      color: var(--accent);
+      padding: 10px 20px;
+      border-radius: 20px;
+      cursor: pointer;
+      margin-top: 20px;
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    .cert-item {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 15px;
+      margin-bottom: 10px;
+    }
+    
+    .success-message {
+      background: rgba(0,200,83,0.1);
+      border: 1px solid #00c853;
+      color: #00c853;
+      padding: 10px;
+      border-radius: 6px;
+      margin-bottom: 20px;
+      display: none;
+    }
+    
+    .login-container {
+      max-width: 400px;
+      margin: 200px auto;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 40px;
+    }
+    
+    .login-container h2 {
+      font-family: 'Poppins', sans-serif;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+<div id="login-screen" class="login-container">
+  <h2>Área Administrativa</h2>
+  <div class="form-group">
+    <label>Email</label>
+    <input type="email" id="login-email" placeholder="seu@email.com">
+  </div>
+  <div class="form-group">
+    <label>Senha</label>
+    <input type="password" id="login-password" placeholder="••••••••">
+  </div>
+  <button class="edit-btn" onclick="login()" style="width: 100%;">Entrar</button>
+</div>
+
+<div id="admin-panel" class="admin-container" style="display: none;">
+  <div class="admin-header">
+    <h1 class="admin-title">Painel Administrativo</h1>
+    <button class="logout-btn" onclick="logout()">Sair</button>
+  </div>
+  
+  <div id="success-message" class="success-message"></div>
+  
+  <!-- Perfil -->
+  <div class="admin-section">
+    <div class="section-header">
+      <h2>Perfil</h2>
+      <button class="edit-btn" onclick="saveProfile()">Salvar Alterações</button>
+    </div>
+    <div class="form-group">
+      <label>Nome</label>
+      <input type="text" id="edit-name" value="Alex Henriques">
+    </div>
+    <div class="form-group">
+      <label>Título Profissional</label>
+      <input type="text" id="edit-title" value="Desenvolvedor">
+    </div>
+    <div class="form-group">
+      <label>Biografia</label>
+      <textarea id="edit-bio" rows="4">Profissional apaixonado por tecnologia e desenvolvimento.</textarea>
+    </div>
+  </div>
+  
+  <!-- Contatos -->
+  <div class="admin-section">
+    <div class="section-header">
+      <h2>Contatos</h2>
+      <button class="edit-btn" onclick="saveContacts()">Salvar Contatos</button>
+    </div>
+    <div class="form-group">
+      <label>Email</label>
+      <input type="email" id="edit-email" value="alexhenriques417@gmail.com">
+    </div>
+    <div class="form-group">
+      <label>Telefone</label>
+      <input type="text" id="edit-phone" value="(83)99608-0118">
+    </div>
+    <div class="form-group">
+      <label>GitHub</label>
+      <input type="text" id="edit-github" value="https://github.com/AlexHenriques417">
+    </div>
+    <div class="form-group">
+      <label>LinkedIn</label>
+      <input type="text" id="edit-linkedin" value="https://www.linkedin.com/in/alex-henriques417/">
+    </div>
+  </div>
+  
+  <!-- Habilidades -->
+  <div class="admin-section">
+    <div class="section-header">
+      <h2>Habilidades</h2>
+      <button class="edit-btn" onclick="saveSkills()">Salvar Habilidades</button>
+    </div>
+    <h3>Soft Skills</h3>
+    <div id="soft-skills-list" class="skills-list"></div>
+    <button class="add-btn" onclick="addSoftSkill()">+ Adicionar Soft Skill</button>
+    
+    <h3 style="margin-top: 30px;">Hard Skills</h3>
+    <div id="hard-skills-list-admin"></div>
+    <button class="add-btn" onclick="addHardSkill()">+ Adicionar Hard Skill</button>
+  </div>
+  
+  <!-- Estatísticas -->
+  <div class="admin-section">
+    <div class="section-header">
+      <h2>Estatísticas</h2>
+      <button class="edit-btn" onclick="saveStats()">Salvar Estatísticas</button>
+    </div>
+    <div id="stats-list"></div>
+    <button class="add-btn" onclick="addStat()">+ Adicionar Estatística</button>
+  </div>
+  
+  <!-- Certificados -->
+  <div class="admin-section">
+    <div class="section-header">
+      <h2>Certificados</h2>
+      <button class="edit-btn" onclick="saveCertificates()">Salvar Certificados</button>
+    </div>
+    <div id="certs-list-admin"></div>
+    <button class="add-btn" onclick="addCertificate()">+ Adicionar Certificado</button>
+  </div>
+</div>
+
+<script src="js/admin.js"></script>
+</body>
+</html>
