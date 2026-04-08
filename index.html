@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Alex Henriques | Portfólio</title>
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 </head>
 <body>
@@ -45,8 +46,8 @@
     </p>
 
     <div class="hero-actions">
-      <a href="#contato" class="btn-primary">Entrar em contato</a>
-      <a href="#projetos" class="btn-ghost">Ver projetos</a>
+      <a href="#contato" class="btn-primary"><i class="fas fa-paper-plane"></i> Entrar em contato</a>
+      <a href="#projetos" class="btn-ghost"><i class="fas fa-code"></i> Ver projetos</a>
     </div>
 
     <div class="hero-stats" id="hero-stats"></div>
@@ -63,16 +64,14 @@
   <div class="about-img-wrap reveal">
     <div class="about-img-frame">
       <div class="about-img-placeholder" id="img-placeholder">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-          <circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/>
-        </svg>
+        <i class="fas fa-user-circle" style="font-size: 64px; opacity: 0.4;"></i>
         <p>Alex Henriques</p>
       </div>
       <img id="profile-img" alt="Foto de Alex Henriques"/>
     </div>
     <div class="about-deco"></div>
     <div class="about-badge">
-      <div class="badge-icon">●</div>
+      <div class="badge-icon"><i class="fas fa-briefcase"></i></div>
       <div class="badge-text">
         <strong id="badge-title">Open to Work</strong>
         <span id="badge-subtitle">Disponível imediatamente</span>
@@ -90,7 +89,7 @@
       Tenho experiência com ferramentas modernas do mercado e um forte comprometimento com a qualidade.
     </p>
     <br/>
-    <a href="#contato" class="btn-primary" style="margin-top:.5rem; display:inline-flex">Ver currículo →</a>
+    <a href="#contato" class="btn-primary" style="margin-top:.5rem; display:inline-flex"><i class="fas fa-download"></i> Ver currículo</a>
   </div>
 </section>
 
@@ -103,7 +102,7 @@
   <div class="skills-grid">
     <div class="skills-card reveal">
       <div class="skills-card-header">
-        <div class="skills-card-icon">Soft</div>
+        <div class="skills-card-icon"><i class="fas fa-heart"></i></div>
         <div>
           <div class="skills-card-title">Soft Skills</div>
           <div class="skills-card-sub">Habilidades comportamentais</div>
@@ -114,7 +113,7 @@
 
     <div class="skills-card reveal">
       <div class="skills-card-header">
-        <div class="skills-card-icon">Hard</div>
+        <div class="skills-card-icon"><i class="fas fa-cogs"></i></div>
         <div>
           <div class="skills-card-title">Hard Skills</div>
           <div class="skills-card-sub">Habilidades técnicas</div>
@@ -151,28 +150,28 @@
     <p class="section-subtitle">Estou sempre aberto a novas oportunidades.</p>
 
     <a id="contact-email" href="#" class="contact-card">
-      <div class="contact-card-icon">✉️</div>
+      <div class="contact-card-icon"><i class="fas fa-envelope"></i></div>
       <div class="contact-card-text">
         <strong>Email</strong>
         <span id="email-text">alexhenriques417@gmail.com</span>
       </div>
     </a>
     <a id="contact-linkedin" href="#" target="_blank" class="contact-card">
-      <div class="contact-card-icon">💼</div>
+      <div class="contact-card-icon"><i class="fab fa-linkedin"></i></div>
       <div class="contact-card-text">
         <strong>LinkedIn</strong>
         <span id="linkedin-text">linkedin.com/in/alex-henriques417</span>
       </div>
     </a>
     <a id="contact-github" href="#" target="_blank" class="contact-card">
-      <div class="contact-card-icon">🐙</div>
+      <div class="contact-card-icon"><i class="fab fa-github"></i></div>
       <div class="contact-card-text">
         <strong>GitHub</strong>
         <span id="github-text">github.com/AlexHenriques417</span>
       </div>
     </a>
     <a id="contact-phone" href="#" class="contact-card">
-      <div class="contact-card-icon">📱</div>
+      <div class="contact-card-icon"><i class="fas fa-phone-alt"></i></div>
       <div class="contact-card-text">
         <strong>WhatsApp / Telefone</strong>
         <span id="phone-text">(83)99608-0118</span>
@@ -195,20 +194,20 @@
         <label class="form-label">Mensagem</label>
         <textarea name="message" class="form-textarea" placeholder="Olá! Gostaria de conversar sobre..." required></textarea>
       </div>
-      <button type="submit" class="form-submit">Enviar mensagem</button>
+      <button type="submit" class="form-submit"><i class="fas fa-paper-plane"></i> Enviar mensagem</button>
     </form>
   </div>
 </section>
 
 <!-- FOOTER -->
 <footer>
-  <p class="footer-copy">© 2024 <span id="footer-name">Alex Henriques</span>. Feito com <span class="footer-heart">♥</span></p>
+  <p class="footer-copy">© <span id="footer-name">Alex Henriques</span>. Profissional em desenvolvimento.</p>
   <div class="social-links">
     <a id="footer-github" href="#" class="social-link" title="GitHub" target="_blank">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0 0 24 12c0-6.63-5.37-12-12-12z"/></svg>
+      <i class="fab fa-github"></i>
     </a>
     <a id="footer-linkedin" href="#" class="social-link" title="LinkedIn" target="_blank">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+      <i class="fab fa-linkedin"></i>
     </a>
   </div>
 </footer>
@@ -216,14 +215,14 @@
 <!-- Modal para Certificados -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
   <div class="modal-box" onclick="event.stopPropagation()">
-    <button class="modal-close" onclick="closeModal()">×</button>
+    <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
     <div class="modal-title" id="modal-title"></div>
     <div class="modal-issuer" id="modal-issuer"></div>
     <div id="modal-content"></div>
   </div>
 </div>
 
-<a href="admin.html" class="admin-link">Admin</a>
+<a href="admin.html" class="admin-link"><i class="fas fa-cog"></i> Admin</a>
 
 <script src="js/main.js"></script>
 </body>
