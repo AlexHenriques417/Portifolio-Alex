@@ -16,15 +16,12 @@
     .edit-btn { background: linear-gradient(135deg, var(--accent2), var(--accent)); border: none; color: white; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
     .form-group { margin-bottom: 20px; }
     .form-group label { display: block; margin-bottom: 8px; color: var(--text-muted); }
-    .form-group input, .form-group textarea, .form-group select { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; color: var(--text); }
+    .form-group input, .form-group textarea { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; color: var(--text); }
     .tech-tag { display: inline-block; background: var(--accent2); color: white; padding: 5px 10px; border-radius: 4px; margin: 5px; font-size: 0.8rem; }
-    .tech-input-container { display: flex; gap: 10px; margin-top: 10px; }
     .login-container { max-width: 400px; margin: 200px auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 40px; }
-    .avatar-preview { width: 150px; height: 150px; border-radius: 8px; object-fit: cover; border: 2px solid var(--border); cursor: pointer; }
-    .image-editor { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: none; align-items: center; justify-content: center; }
-    .editor-container { max-width: 500px; background: var(--surface); padding: 30px; border-radius: 12px; }
-    .editor-preview { max-width: 300px; max-height: 300px; margin: 20px auto; }
-    .range-slider { width: 100%; margin: 20px 0; }
+    .avatar-preview { width: 150px; height: 150px; border-radius: 8px; object-fit: cover; border: 2px solid var(--border); }
+    .cert-item { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 15px; margin-bottom: 10px; }
+    .success-message { background: rgba(0,200,83,0.1); border: 1px solid #00c853; color: #00c853; padding: 10px; border-radius: 6px; margin-bottom: 20px; display: none; }
   </style>
 </head>
 <body>
@@ -48,7 +45,7 @@
     <button class="logout-btn" onclick="logout()">Sair</button>
   </div>
   
-  <div id="success-message" class="success-message" style="display: none;"></div>
+  <div id="success-message" class="success-message"></div>
   
   <!-- Perfil -->
   <div class="admin-section">
@@ -69,17 +66,16 @@
       <textarea id="edit-bio" rows="4"></textarea>
     </div>
     
-    <!-- UPLOAD DE FOTO COM AJUSTE -->
+    <!-- UPLOAD DE FOTO SIMPLES (SEM EDITOR) -->
     <div class="form-group">
       <label>Foto de Perfil</label>
       <div style="display: flex; gap: 20px; align-items: start;">
         <div>
-          <img id="profile-preview" class="avatar-preview" style="display: none;" onclick="openImageEditor()">
+          <img id="profile-preview" class="avatar-preview" style="display: none;">
           <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
         </div>
         <div>
           <button onclick="document.getElementById('avatar-upload').click()" class="edit-btn">Escolher Foto</button>
-          <button onclick="openImageEditor()" class="edit-btn" style="margin-left: 10px;">Ajustar Foto</button>
           <button onclick="uploadAvatar()" class="edit-btn" style="margin-left: 10px;">Salvar Foto</button>
         </div>
       </div>
@@ -98,11 +94,68 @@
     <div class="form-group"><label>LinkedIn</label><input type="text" id="edit-linkedin"></div>
   </div>
   
+  <!-- Habilidades -->
+  <div class="admin-section">
+    <div class="section-header">
+      <h2>Habilidades</h2>
+      <button class="edit-btn" onclick="saveSkills()">Salvar</button>
+    </div>
+    <h3>Soft Skills</h3>
+    <div id="soft-skills-list" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;"></div>
+    <button class="edit-btn" onclick="addSoftSkill()" style="margin-bottom: 20px;">+ Adicionar Soft Skill</button>
+    
+    <h3>Hard Skills</h3>
+    <div id="hard-skills-list-admin"></div>
+    <button class="edit-btn" onclick="addHardSkill()" style="margin-top: 20px;">+ Adicionar Hard Skill</button>
+  </div>
+  
+  <!-- Estatísticas -->
+  <div class="admin-section">
+    <div class="section-header">
+      <h2>Estatísticas</h2>
+      <button class="edit-btn" onclick="saveStats()">Salvar</button>
+    </div>
+    <div id="stats-list"></div>
+    <button class="edit-btn" onclick="addStat()">+ Adicionar Estatística</button>
+  </div>
+  
+  <!-- Certificados -->
+  <div class="admin-section">
+    <div class="section-header">
+      <h2>Certificados</h2>
+      <button class="edit-btn" onclick="saveCertificates()">Salvar</button>
+    </div>
+    
+    <div style="background: var(--bg2); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+      <h3>Adicionar Novo Certificado</h3>
+      <div class="form-group">
+        <label>Nome do Certificado</label>
+        <input type="text" id="new-cert-name" placeholder="Ex: Desenvolvimento Web Completo">
+      </div>
+      <div class="form-group">
+        <label>Instituição</label>
+        <input type="text" id="new-cert-issuer" placeholder="Ex: Udemy">
+      </div>
+      <div class="form-group">
+        <label>Data</label>
+        <input type="text" id="new-cert-date" placeholder="Ex: Jan 2024">
+      </div>
+      <div class="form-group">
+        <label>Arquivo (PDF ou Imagem)</label>
+        <input type="file" id="cert-file-upload" accept=".pdf,image/*">
+      </div>
+      <button class="edit-btn" onclick="addCertificateWithFile()">Adicionar Certificado</button>
+    </div>
+    
+    <h3>Certificados Existentes</h3>
+    <div id="certs-list-admin"></div>
+  </div>
+  
   <!-- Projetos -->
   <div class="admin-section">
     <div class="section-header">
       <h2>Projetos</h2>
-      <button class="edit-btn" onclick="saveProjects()">Salvar Todos</button>
+      <button class="edit-btn" onclick="saveProjects()">Salvar</button>
     </div>
     
     <div style="background: var(--bg2); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
@@ -141,24 +194,6 @@
     
     <h3>Projetos Existentes</h3>
     <div id="projects-list-admin"></div>
-  </div>
-</div>
-
-<!-- Editor de Imagem -->
-<div class="image-editor" id="image-editor" onclick="closeImageEditor()">
-  <div class="editor-container" onclick="event.stopPropagation()">
-    <h3>Ajustar Foto</h3>
-    <img id="editor-image" class="editor-preview">
-    <div class="form-group">
-      <label>Zoom: <span id="zoom-value">100</span>%</label>
-      <input type="range" id="zoom-slider" class="range-slider" min="50" max="200" value="100">
-    </div>
-    <div class="form-group">
-      <label>Rotacao: <span id="rotate-value">0</span>°</label>
-      <input type="range" id="rotate-slider" class="range-slider" min="0" max="360" value="0">
-    </div>
-    <button class="edit-btn" onclick="applyImageAdjustments()">Aplicar Ajustes</button>
-    <button class="edit-btn" onclick="closeImageEditor()" style="margin-left: 10px;">Cancelar</button>
   </div>
 </div>
 
