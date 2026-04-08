@@ -170,6 +170,15 @@
       margin-bottom: 30px;
       text-align: center;
     }
+    
+    .avatar-preview {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      object-fit: cover;
+      background: var(--bg);
+      border: 2px solid var(--border);
+    }
   </style>
 </head>
 <body>
@@ -178,7 +187,7 @@
   <h2>Área Administrativa</h2>
   <div class="form-group">
     <label>Email</label>
-    <input type="email" id="login-email" placeholder="seu@email.com">
+    <input type="email" id="login-email" placeholder="seu@email.com" value="alexhenriques417@gmail.com">
   </div>
   <div class="form-group">
     <label>Senha</label>
@@ -212,6 +221,19 @@
     <div class="form-group">
       <label>Biografia</label>
       <textarea id="edit-bio" rows="4">Profissional apaixonado por tecnologia e desenvolvimento.</textarea>
+    </div>
+    
+    <!-- UPLOAD DE FOTO -->
+    <div class="form-group">
+      <label>Foto de Perfil</label>
+      <div style="display: flex; align-items: center; gap: 20px;">
+        <img id="profile-preview" class="avatar-preview" style="display: none;">
+        <div>
+          <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+          <button type="button" onclick="document.getElementById('avatar-upload').click()" class="edit-btn" style="padding: 8px 16px;">📸 Escolher Foto</button>
+          <button type="button" onclick="uploadAvatar()" class="edit-btn" style="padding: 8px 16px; margin-left: 10px;">⬆️ Fazer Upload</button>
+        </div>
+      </div>
     </div>
   </div>
   
@@ -270,8 +292,32 @@
       <h2>Certificados</h2>
       <button class="edit-btn" onclick="saveCertificates()">Salvar Certificados</button>
     </div>
+    
+    <!-- FORMULÁRIO PARA ADICIONAR CERTIFICADO COM ARQUIVO -->
+    <div style="background: var(--bg2); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
+      <h3 style="margin-bottom: 20px;">➕ Adicionar Novo Certificado</h3>
+      <div class="form-group">
+        <label>Nome do Certificado</label>
+        <input type="text" id="new-cert-name" placeholder="Ex: Desenvolvimento Web Completo">
+      </div>
+      <div class="form-group">
+        <label>Instituição</label>
+        <input type="text" id="new-cert-issuer" placeholder="Ex: Udemy">
+      </div>
+      <div class="form-group">
+        <label>Data</label>
+        <input type="text" id="new-cert-date" placeholder="Ex: Jan 2024">
+      </div>
+      <div class="form-group">
+        <label>Arquivo do Certificado (PDF ou Imagem)</label>
+        <input type="file" id="cert-file-upload" accept=".pdf,image/*" style="background: var(--bg); padding: 10px;">
+      </div>
+      <button class="edit-btn" onclick="addCertificateWithFile()">📄 Adicionar Certificado</button>
+    </div>
+    
+    <!-- LISTA DE CERTIFICADOS EXISTENTES -->
+    <h3>Certificados Existentes</h3>
     <div id="certs-list-admin"></div>
-    <button class="add-btn" onclick="addCertificate()">+ Adicionar Certificado</button>
   </div>
 </div>
 

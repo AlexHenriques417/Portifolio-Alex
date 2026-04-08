@@ -2,7 +2,7 @@
 const SUPABASE_URL = 'https://srjhmprdkrjsdvrsrycj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyamhtcHJka3Jqc2R2cnNyeWNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1OTI4ODYsImV4cCI6MjA5MTE2ODg4Nn0.fnZubFVAQbRkaVpxxgIzqFFutalltcxwC4DsgS0TJv4';
 
-// Criar cliente Supabase (apenas UMA vez)
+// Criar cliente Supabase
 const supabaseAdmin = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 let currentUser = null;
@@ -61,9 +61,16 @@ async function showAdminPanel() {
 async function loadProfileData() {
   const { data } = await supabaseAdmin.from('profile').select('*').eq('id', 1).single();
   if (data) {
-    document.getElementById('edit-name').value = data.name;
-    document.getElementById('edit-title').value = data.title;
+    document.getElementById('edit-name').value = data.name || 'Alex Henriques';
+    document.getElementById('edit-title').value = data.title || 'Desenvolvedor';
     document.getElementById('edit-bio').value = data.bio || '';
+    
+    // Mostrar preview da foto se existir
+    if (data.avatar_url) {
+      const preview = document.getElementById('profile-preview');
+      preview.src = data.avatar_url;
+      preview.style.display = 'block';
+    }
   }
 }
 
@@ -71,10 +78,10 @@ async function loadProfileData() {
 async function loadContactsData() {
   const { data } = await supabaseAdmin.from('contacts').select('*').eq('id', 1).single();
   if (data) {
-    document.getElementById('edit-email').value = data.email;
-    document.getElementById('edit-phone').value = data.phone;
-    document.getElementById('edit-github').value = data.github;
-    document.getElementById('edit-linkedin').value = data.linkedin;
+    document.getElementById('edit-email').value = data.email || '';
+    document.getElementById('edit-phone').value = data.phone || '';
+    document.getElementById('edit-github').value = data.github || '';
+    document.getElementById('edit-linkedin').value = data.linkedin || '';
   }
 }
 
@@ -156,6 +163,11 @@ function renderCertificates() {
         <input type="text" value="${c.name}" onchange="updateCertificate(${c.id}, 'name', this.value)" placeholder="Nome" style="width: 100%; margin-bottom: 10px; background: var(--bg); border: 1px solid var(--border); padding: 8px; border-radius: 6px; color: var(--text);">
         <input type="text" value="${c.issuer}" onchange="updateCertificate(${c.id}, 'issuer', this.value)" placeholder="Emissor" style="width: 100%; margin-bottom: 10px; background: var(--bg); border: 1px solid var(--border); padding: 8px; border-radius: 6px; color: var(--text);">
         <input type="text" value="${c.date}" onchange="updateCertificate(${c.id}, 'date', this.value)" placeholder="Data" style="width: 100%; margin-bottom: 10px; background: var(--bg); border: 1px solid var(--border); padding: 8px; border-radius: 6px; color: var(--text);">
+        ${c.image_url ? `
+          <div style="margin: 10px 0;">
+            <a href="${c.image_url}" target="_blank" style="color: var(--accent); text-decoration: none;">📎 Ver arquivo do certificado</a>
+          </div>
+        ` : '<p style="color: var(--text-muted); margin: 10px 0;">Nenhum arquivo anexado</p>'}
         <button onclick="deleteCertificate(${c.id})" style="background: var(--accent3); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Remover</button>
       </div>
     `).join('');
@@ -274,6 +286,132 @@ async function addCertificate() {
   }
 }
 
+// ==========================================
+// NOVAS FUNÇÕES: UPLOAD DE AVATAR E CERTIFICADOS
+// ==========================================
+
+// Preview da foto
+document.getElementById('avatar-upload')?.addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('profile-preview');
+      preview.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+// Upload de avatar
+async function uploadAvatar() {
+  const fileInput = document.getElementById('avatar-upload');
+  const file = fileInput.files[0];
+  
+  if (!file) {
+    alert('Selecione uma imagem primeiro!');
+    return;
+  }
+  
+  showMessage('Fazendo upload da foto...');
+  
+  const fileExt = file.name.split('.').pop();
+  const fileName = `avatar-${Date.now()}.${fileExt}`;
+  
+  const { data, error } = await supabaseAdmin.storage
+    .from('avatars')
+    .upload(fileName, file);
+  
+  if (error) {
+    console.error('Erro no upload:', error);
+    showMessage('Erro ao fazer upload da foto');
+    return;
+  }
+  
+  const { data: { publicUrl } } = supabaseAdmin.storage
+    .from('avatars')
+    .getPublicUrl(fileName);
+  
+  // Salvar URL no perfil
+  const { error: updateError } = await supabaseAdmin
+    .from('profile')
+    .update({ avatar_url: publicUrl })
+    .eq('id', 1);
+  
+  if (updateError) {
+    console.error('Erro ao salvar URL:', updateError);
+    showMessage('Erro ao salvar foto no perfil');
+  } else {
+    showMessage('✅ Foto de perfil atualizada com sucesso!');
+  }
+}
+
+// Adicionar certificado com arquivo
+async function addCertificateWithFile() {
+  const name = document.getElementById('new-cert-name').value;
+  const issuer = document.getElementById('new-cert-issuer').value;
+  const date = document.getElementById('new-cert-date').value;
+  const fileInput = document.getElementById('cert-file-upload');
+  const file = fileInput.files[0];
+  
+  if (!name || !issuer || !date) {
+    alert('Preencha todos os campos do certificado!');
+    return;
+  }
+  
+  let fileUrl = null;
+  
+  if (file) {
+    showMessage('Fazendo upload do certificado...');
+    
+    const fileExt = file.name.split('.').pop();
+    const fileName = `cert-${Date.now()}.${fileExt}`;
+    
+    const { data, error } = await supabaseAdmin.storage
+      .from('certificates')
+      .upload(fileName, file);
+    
+    if (error) {
+      console.error('Erro no upload:', error);
+      showMessage('Erro ao fazer upload do arquivo');
+      return;
+    }
+    
+    const { data: { publicUrl } } = supabaseAdmin.storage
+      .from('certificates')
+      .getPublicUrl(fileName);
+    
+    fileUrl = publicUrl;
+  }
+  
+  // Salvar certificado no banco
+  const { error } = await supabaseAdmin
+    .from('certificates')
+    .insert({ 
+      name, 
+      issuer, 
+      date, 
+      image_url: fileUrl 
+    });
+  
+  if (error) {
+    console.error('Erro ao salvar certificado:', error);
+    showMessage('Erro ao salvar certificado');
+  } else {
+    showMessage('✅ Certificado adicionado com sucesso!');
+    
+    // Limpar formulário
+    document.getElementById('new-cert-name').value = '';
+    document.getElementById('new-cert-issuer').value = '';
+    document.getElementById('new-cert-date').value = '';
+    document.getElementById('cert-file-upload').value = '';
+    
+    // Recarregar lista
+    await loadCertificatesData();
+  }
+}
+
 function showMessage(msg) {
   const el = document.getElementById('success-message');
   if (el) {
@@ -301,6 +439,8 @@ window.saveContacts = saveContacts;
 window.saveSkills = saveSkills;
 window.saveStats = saveStats;
 window.saveCertificates = saveCertificates;
+window.uploadAvatar = uploadAvatar;
+window.addCertificateWithFile = addCertificateWithFile;
 
 // Inicializar
 checkSession();
