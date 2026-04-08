@@ -3,33 +3,35 @@ const SUPABASE_URL = 'https://srjhmprdkrjsdvrsrycj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyamhtcHJka3Jqc2R2cnNyeWNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1OTI4ODYsImV4cCI6MjA5MTE2ODg4Nn0.fnZubFVAQbRkaVpxxgIzqFFutalltcxwC4DsgS0TJv4';
 
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-// Configuração do FormSpree
 const FORMSPREE_ID = 'mojpbnpo';
 
 let certificates = [];
-let projects = [];
 
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🚀 Iniciando carregamento...');
   
-  await loadProfile();
-  await loadContacts();
-  await loadSkills();
-  await loadStats();
-  await loadProjects();
-  await loadCertificates();
-  
-  initReveal();
-  initTypedEffect();
-  
-  console.log('✅ Portfólio carregado!');
+  try {
+    await loadProfile();
+    await loadContacts();
+    await loadSkills();
+    await loadStats();
+    await loadProjects();
+    await loadCertificates();
+    
+    initReveal();
+    initTypedEffect();
+    
+    console.log('✅ Portfólio carregado!');
+  } catch (err) {
+    console.error('❌ Erro ao carregar:', err);
+  }
 });
 
-// Carregar perfil
 async function loadProfile() {
   try {
-    const { data } = await supabaseClient.from('profile').select('*').eq('id', 1).single();
+    const { data, error } = await supabaseClient.from('profile').select('*').eq('id', 1).single();
+    if (error) throw error;
+    
     if (data) {
       document.getElementById('hero-name').textContent = data.name || 'Alex Henriques';
       document.getElementById('hero-title').textContent = data.title || 'Desenvolvedor';
@@ -48,14 +50,15 @@ async function loadProfile() {
       }
     }
   } catch (err) {
-    console.error('Erro:', err);
+    console.error('Erro profile:', err);
   }
 }
 
-// Carregar contatos
 async function loadContacts() {
   try {
-    const { data } = await supabaseClient.from('contacts').select('*').eq('id', 1).single();
+    const { data, error } = await supabaseClient.from('contacts').select('*').eq('id', 1).single();
+    if (error) throw error;
+    
     if (data) {
       document.getElementById('email-text').textContent = data.email;
       document.getElementById('phone-text').textContent = data.phone;
@@ -71,14 +74,15 @@ async function loadContacts() {
       document.getElementById('footer-linkedin').href = data.linkedin;
     }
   } catch (err) {
-    console.error('Erro:', err);
+    console.error('Erro contacts:', err);
   }
 }
 
-// Carregar habilidades
 async function loadSkills() {
   try {
-    const { data } = await supabaseClient.from('skills').select('*').order('id');
+    const { data, error } = await supabaseClient.from('skills').select('*').order('id');
+    if (error) throw error;
+    
     if (data && data.length > 0) {
       const softSkills = data.filter(s => s.type === 'soft');
       const hardSkills = data.filter(s => s.type === 'hard');
@@ -104,14 +108,15 @@ async function loadSkills() {
       }
     }
   } catch (err) {
-    console.error('Erro:', err);
+    console.error('Erro skills:', err);
   }
 }
 
-// Carregar estatísticas
 async function loadStats() {
   try {
-    const { data } = await supabaseClient.from('stats').select('*');
+    const { data, error } = await supabaseClient.from('stats').select('*');
+    if (error) throw error;
+    
     if (data && data.length > 0) {
       const container = document.getElementById('hero-stats');
       if (container) {
@@ -124,44 +129,16 @@ async function loadStats() {
       }
     }
   } catch (err) {
-    console.error('Erro:', err);
+    console.error('Erro stats:', err);
   }
 }
 
-// Carregar certificados
-async function loadCertificates() {
-  try {
-    const { data } = await supabaseClient.from('certificates').select('*');
-    if (data && data.length > 0) {
-      certificates = data;
-      const container = document.getElementById('certs-grid');
-      if (container) {
-        container.innerHTML = data.map((cert, index) => `
-          <div class="cert-card reveal" onclick="openModal(${index})">
-            <div class="cert-icon">🎓</div>
-            <div>
-              <div class="cert-name">${cert.name}</div>
-              <div class="cert-issuer">${cert.issuer}</div>
-            </div>
-            <div>
-              <span class="cert-badge">✓ Concluído</span>
-            </div>
-            <div class="cert-date">📅 ${cert.date}</div>
-          </div>
-        `).join('');
-      }
-    }
-  } catch (err) {
-    console.error('Erro:', err);
-  }
-}
-
-// Carregar projetos
 async function loadProjects() {
   try {
-    const { data } = await supabaseClient.from('projects').select('*').order('featured', { ascending: false });
+    const { data, error } = await supabaseClient.from('projects').select('*').order('featured', { ascending: false });
+    if (error) throw error;
+    
     if (data) {
-      projects = data;
       const container = document.getElementById('projects-grid');
       if (container) {
         container.innerHTML = data.map(p => `
@@ -183,11 +160,39 @@ async function loadProjects() {
       }
     }
   } catch (err) {
-    console.error('Erro:', err);
+    console.error('Erro projects:', err);
   }
 }
 
-// Modal de certificado
+async function loadCertificates() {
+  try {
+    const { data, error } = await supabaseClient.from('certificates').select('*');
+    if (error) throw error;
+    
+    if (data && data.length > 0) {
+      certificates = data;
+      const container = document.getElementById('certs-grid');
+      if (container) {
+        container.innerHTML = data.map((cert, index) => `
+          <div class="cert-card reveal" onclick="openModal(${index})">
+            <div class="cert-icon">🎓</div>
+            <div>
+              <div class="cert-name">${cert.name}</div>
+              <div class="cert-issuer">${cert.issuer}</div>
+            </div>
+            <div>
+              <span class="cert-badge">✓ Concluído</span>
+            </div>
+            <div class="cert-date">📅 ${cert.date}</div>
+          </div>
+        `).join('');
+      }
+    }
+  } catch (err) {
+    console.error('Erro certificates:', err);
+  }
+}
+
 function openModal(index) {
   const cert = certificates[index];
   if (!cert) return;
@@ -199,18 +204,12 @@ function openModal(index) {
     const fileExt = cert.image_url.split('.').pop().toLowerCase();
     
     if (fileExt === 'pdf') {
-      document.getElementById('modal-content').innerHTML = `
-        <embed src="${cert.image_url}" type="application/pdf" width="100%" height="500px" />
-      `;
+      document.getElementById('modal-content').innerHTML = `<embed src="${cert.image_url}" type="application/pdf" width="100%" height="500px" />`;
     } else {
-      document.getElementById('modal-content').innerHTML = `
-        <img class="modal-img" src="${cert.image_url}" alt="${cert.name}"/>
-      `;
+      document.getElementById('modal-content').innerHTML = `<img class="modal-img" src="${cert.image_url}" alt="${cert.name}"/>`;
     }
   } else {
-    document.getElementById('modal-content').innerHTML = `
-      <div class="modal-placeholder">Certificado disponível mediante solicitação</div>
-    `;
+    document.getElementById('modal-content').innerHTML = `<div class="modal-placeholder">Certificado disponível mediante solicitação</div>`;
   }
   
   document.getElementById('modal-overlay').classList.add('open');
@@ -220,15 +219,14 @@ function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
 }
 
-// Enviar mensagem
 async function sendMessage(event) {
   event.preventDefault();
   
   const form = event.target;
   const formData = new FormData(form);
-  
   const btn = form.querySelector('.form-submit');
   const originalText = btn.innerHTML;
+  
   btn.innerHTML = '⏳ Enviando...';
   btn.disabled = true;
   
@@ -243,65 +241,49 @@ async function sendMessage(event) {
       btn.innerHTML = '✅ Mensagem enviada!';
       btn.style.background = 'linear-gradient(135deg,#00c853,#00e676)';
       form.reset();
-      
-      setTimeout(() => {
-        btn.innerHTML = originalText;
-        btn.style.background = '';
-        btn.disabled = false;
-      }, 3000);
     } else {
       throw new Error('Erro no envio');
     }
   } catch (error) {
     btn.innerHTML = '❌ Erro ao enviar';
+  } finally {
     setTimeout(() => {
       btn.innerHTML = originalText;
+      btn.style.background = '';
       btn.disabled = false;
     }, 3000);
   }
 }
 
-// Efeito de digitação
 function initTypedEffect() {
-  const roles = ['Desenvolvedor 💻', 'Analista de Dados 📊', 'Profissional de TI ⚙️', 'Full Stack Developer 🚀'];
+  const roles = ['Desenvolvedor 💻', 'Analista de Dados 📊', 'Full Stack 🚀'];
   let ri = 0, ci = 0, deleting = false;
   const el = document.getElementById('typed-text');
-  
   if (!el) return;
   
   function type() {
     const cur = roles[ri];
     el.textContent = deleting ? cur.slice(0, ci--) : cur.slice(0, ci++);
-    if (!deleting && ci > cur.length) { 
-      setTimeout(() => deleting = true, 1500); 
-    }
-    if (deleting && ci < 0) { 
-      deleting = false; 
-      ri = (ri + 1) % roles.length; 
-      ci = 0; 
+    if (!deleting && ci > cur.length) setTimeout(() => deleting = true, 1500);
+    if (deleting && ci < 0) {
+      deleting = false;
+      ri = (ri + 1) % roles.length;
+      ci = 0;
     }
     setTimeout(type, deleting ? 45 : 90);
   }
   type();
 }
 
-// Reveal on scroll
 function initReveal() {
   const obs = new IntersectionObserver(entries => {
-    entries.forEach(e => { 
-      if (e.isIntersecting) e.target.classList.add('visible'); 
-    });
+    entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); });
   }, { threshold: 0.1 });
-  
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 }
 
-// Fechar modal com ESC
-document.addEventListener('keydown', e => {
-  if (e.key === 'Escape') closeModal();
-});
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
-// Expor funções globalmente
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.sendMessage = sendMessage;
