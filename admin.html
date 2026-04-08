@@ -53,7 +53,7 @@
   <!-- Perfil -->
   <div class="admin-section">
     <div class="section-header">
-      <h2><i class="fas fa-user"></i> Perfil</h2>
+      <h2><i class="fas fa-user"></i>&nbsp;Perfil</h2>
       <button class="edit-btn" onclick="saveProfile()"><i class="fas fa-save"></i> Salvar</button>
     </div>
     <div class="form-group">
@@ -88,7 +88,7 @@
   <!-- Contatos -->
   <div class="admin-section">
     <div class="section-header">
-      <h2><i class="fas fa-address-book"></i> Contatos</h2>
+      <h2><i class="fas fa-address-book"></i>&nbsp;Contatos</h2>
       <button class="edit-btn" onclick="saveContacts()"><i class="fas fa-save"></i> Salvar</button>
     </div>
     <div class="form-group"><label><i class="fas fa-envelope"></i> Email</label><input type="email" id="edit-email"></div>
@@ -100,14 +100,14 @@
   <!-- Habilidades -->
   <div class="admin-section">
     <div class="section-header">
-      <h2><i class="fas fa-chart-bar"></i> Habilidades</h2>
+      <h2><i class="fas fa-chart-bar"></i>&nbsp;Habilidades</h2>
       <button class="edit-btn" onclick="saveSkills()"><i class="fas fa-save"></i> Salvar</button>
     </div>
-    <h3><i class="fas fa-heart"></i> Soft Skills</h3>
+    <h3><i class="fas fa-heart"></i>&nbsp;Soft Skills</h3>
     <div id="soft-skills-list" style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;"></div>
     <button class="edit-btn" onclick="addSoftSkill()"><i class="fas fa-plus"></i> Adicionar Soft Skill</button>
     
-    <h3 style="margin-top: 30px;"><i class="fas fa-cogs"></i> Hard Skills</h3>
+    <h3 style="margin-top: 30px;"><i class="fas fa-cogs"></i>&nbsp;Hard Skills</h3>
     <div id="hard-skills-list-admin"></div>
     <button class="edit-btn" onclick="addHardSkill()"><i class="fas fa-plus"></i> Adicionar Hard Skill</button>
   </div>
@@ -115,7 +115,7 @@
   <!-- Estatísticas -->
   <div class="admin-section">
     <div class="section-header">
-      <h2><i class="fas fa-chart-pie"></i> Estatísticas</h2>
+      <h2><i class="fas fa-chart-pie"></i>&nbsp;Estatísticas</h2>
       <button class="edit-btn" onclick="saveStats()"><i class="fas fa-save"></i> Salvar</button>
     </div>
     <div id="stats-list"></div>
@@ -125,12 +125,12 @@
   <!-- Certificados -->
   <div class="admin-section">
     <div class="section-header">
-      <h2><i class="fas fa-certificate"></i> Certificados</h2>
+      <h2><i class="fas fa-certificate"></i>&nbsp;Certificados</h2>
       <button class="edit-btn" onclick="saveCertificates()"><i class="fas fa-save"></i> Salvar</button>
     </div>
     
     <div style="background: var(--bg2); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-      <h3><i class="fas fa-plus-circle"></i> Adicionar Novo Certificado</h3>
+      <h3><i class="fas fa-plus-circle"></i>&nbsp;Adicionar Novo Certificado</h3>
       <div class="form-group">
         <label>Nome do Certificado</label>
         <input type="text" id="new-cert-name" placeholder="Ex: Desenvolvimento Web Completo">
@@ -157,12 +157,12 @@
   <!-- Projetos -->
   <div class="admin-section">
     <div class="section-header">
-      <h2><i class="fas fa-project-diagram"></i> Projetos</h2>
+      <h2><i class="fas fa-project-diagram"></i>&nbsp;Projetos</h2>
       <button class="edit-btn" onclick="saveProjects()"><i class="fas fa-save"></i> Salvar</button>
     </div>
     
     <div style="background: var(--bg2); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-      <h3><i class="fas fa-plus-circle"></i> Adicionar Novo Projeto</h3>
+      <h3><i class="fas fa-plus-circle"></i>&nbsp;Adicionar Novo Projeto</h3>
       <div class="form-group">
         <label>Título</label>
         <input type="text" id="new-project-title">
@@ -188,9 +188,7 @@
         <input type="file" id="new-project-image" accept="image/*">
       </div>
       <div class="form-group">
-        <label>
-          <input id="new-project-featured"> Projeto em destaque
-        </label>
+        <h4>Projeto em destaque</h4>
       </div>
       <button class="edit-btn" onclick="addProject()"><i class="fas fa-plus"></i> Adicionar Projeto</button>
     </div>
