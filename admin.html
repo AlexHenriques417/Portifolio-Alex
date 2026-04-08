@@ -30,7 +30,7 @@
 <body>
 
 <div id="login-screen" class="login-container">
-  <h2>Área Administrativa</h2>
+  <h2>Area Administrativa</h2>
   <div class="form-group">
     <label>Email</label>
     <input type="email" id="login-email" value="alexhenriques417@gmail.com">
@@ -61,7 +61,7 @@
       <input type="text" id="edit-name" value="Alex Henriques">
     </div>
     <div class="form-group">
-      <label>Título</label>
+      <label>Titulo</label>
       <input type="text" id="edit-title" value="Desenvolvedor">
     </div>
     <div class="form-group">
@@ -78,9 +78,9 @@
           <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
         </div>
         <div>
-          <button onclick="document.getElementById('avatar-upload').click()" class="edit-btn">📸 Escolher Foto</button>
-          <button onclick="openImageEditor()" class="edit-btn" style="margin-left: 10px;">✂️ Ajustar Foto</button>
-          <button onclick="uploadAvatar()" class="edit-btn" style="margin-left: 10px;">⬆️ Salvar Foto</button>
+          <button onclick="document.getElementById('avatar-upload').click()" class="edit-btn">Escolher Foto</button>
+          <button onclick="openImageEditor()" class="edit-btn" style="margin-left: 10px;">Ajustar Foto</button>
+          <button onclick="uploadAvatar()" class="edit-btn" style="margin-left: 10px;">Salvar Foto</button>
         </div>
       </div>
     </div>
@@ -106,17 +106,17 @@
     </div>
     
     <div style="background: var(--bg2); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-      <h3>➕ Adicionar Novo Projeto</h3>
+      <h3>Adicionar Novo Projeto</h3>
       <div class="form-group">
-        <label>Título</label>
+        <label>Titulo</label>
         <input type="text" id="new-project-title">
       </div>
       <div class="form-group">
-        <label>Descrição</label>
+        <label>Descricao</label>
         <textarea id="new-project-desc" rows="3"></textarea>
       </div>
       <div class="form-group">
-        <label>Tecnologias (separadas por vírgula)</label>
+        <label>Tecnologias (separadas por virgula)</label>
         <input type="text" id="new-project-techs" placeholder="React, Node.js, PostgreSQL">
       </div>
       <div class="form-group">
@@ -142,8 +142,6 @@
     <h3>Projetos Existentes</h3>
     <div id="projects-list-admin"></div>
   </div>
-  
-  <!-- Habilidades, Estatísticas, Certificados... (mantenha o resto igual) -->
 </div>
 
 <!-- Editor de Imagem -->
@@ -156,7 +154,7 @@
       <input type="range" id="zoom-slider" class="range-slider" min="50" max="200" value="100">
     </div>
     <div class="form-group">
-      <label>Rotação: <span id="rotate-value">0</span>°</label>
+      <label>Rotacao: <span id="rotate-value">0</span>°</label>
       <input type="range" id="rotate-slider" class="range-slider" min="0" max="360" value="0">
     </div>
     <button class="edit-btn" onclick="applyImageAdjustments()">Aplicar Ajustes</button>
