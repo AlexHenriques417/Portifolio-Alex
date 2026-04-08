@@ -9,6 +9,11 @@ let currentUser = null;
 let skills = [];
 let stats = [];
 let certificates = [];
+let projects = [];
+
+// Variáveis para o editor de imagem
+let currentImageFile = null;
+let adjustedImageBlob = null;
 
 // Verificar sessão
 async function checkSession() {
@@ -55,6 +60,7 @@ async function showAdminPanel() {
   await loadSkillsData();
   await loadStatsData();
   await loadCertificatesData();
+  await loadProjectsData();
 }
 
 // Carregar dados do perfil
@@ -65,10 +71,11 @@ async function loadProfileData() {
     document.getElementById('edit-title').value = data.title || 'Desenvolvedor';
     document.getElementById('edit-bio').value = data.bio || '';
     
-    // Mostrar preview da foto se existir
     if (data.avatar_url) {
       const preview = document.getElementById('profile-preview');
+      const editorImg = document.getElementById('editor-image');
       preview.src = data.avatar_url;
+      editorImg.src = data.avatar_url;
       preview.style.display = 'block';
     }
   }
@@ -165,9 +172,9 @@ function renderCertificates() {
         <input type="text" value="${c.date}" onchange="updateCertificate(${c.id}, 'date', this.value)" placeholder="Data" style="width: 100%; margin-bottom: 10px; background: var(--bg); border: 1px solid var(--border); padding: 8px; border-radius: 6px; color: var(--text);">
         ${c.image_url ? `
           <div style="margin: 10px 0;">
-            <a href="${c.image_url}" target="_blank" style="color: var(--accent); text-decoration: none;">📎 Ver arquivo do certificado</a>
+            <a href="${c.image_url}" target="_blank" style="color: var(--accent); text-decoration: none;">📎 Ver arquivo</a>
           </div>
-        ` : '<p style="color: var(--text-muted); margin: 10px 0;">Nenhum arquivo anexado</p>'}
+        ` : '<p style="color: var(--text-muted); margin: 10px 0;">Nenhum arquivo</p>'}
         <button onclick="deleteCertificate(${c.id})" style="background: var(--accent3); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer;">Remover</button>
       </div>
     `).join('');
@@ -212,6 +219,10 @@ async function saveStats() {
 
 async function saveCertificates() {
   showMessage('Certificados salvos com sucesso!');
+}
+
+async function saveProjects() {
+  showMessage('Projetos salvos com sucesso!');
 }
 
 // Funções auxiliares
@@ -286,68 +297,6 @@ async function addCertificate() {
   }
 }
 
-// ==========================================
-// NOVAS FUNÇÕES: UPLOAD DE AVATAR E CERTIFICADOS
-// ==========================================
-
-// Preview da foto
-document.getElementById('avatar-upload')?.addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (file) {
-    const reader = new FileReader();
-    reader.onload = function(e) {
-      const preview = document.getElementById('profile-preview');
-      preview.src = e.target.result;
-      preview.style.display = 'block';
-    };
-    reader.readAsDataURL(file);
-  }
-});
-
-// Upload de avatar
-async function uploadAvatar() {
-  const fileInput = document.getElementById('avatar-upload');
-  const file = fileInput.files[0];
-  
-  if (!file) {
-    alert('Selecione uma imagem primeiro!');
-    return;
-  }
-  
-  showMessage('Fazendo upload da foto...');
-  
-  const fileExt = file.name.split('.').pop();
-  const fileName = `avatar-${Date.now()}.${fileExt}`;
-  
-  const { data, error } = await supabaseAdmin.storage
-    .from('avatars')
-    .upload(fileName, file);
-  
-  if (error) {
-    console.error('Erro no upload:', error);
-    showMessage('Erro ao fazer upload da foto');
-    return;
-  }
-  
-  const { data: { publicUrl } } = supabaseAdmin.storage
-    .from('avatars')
-    .getPublicUrl(fileName);
-  
-  // Salvar URL no perfil
-  const { error: updateError } = await supabaseAdmin
-    .from('profile')
-    .update({ avatar_url: publicUrl })
-    .eq('id', 1);
-  
-  if (updateError) {
-    console.error('Erro ao salvar URL:', updateError);
-    showMessage('Erro ao salvar foto no perfil');
-  } else {
-    showMessage('✅ Foto de perfil atualizada com sucesso!');
-  }
-}
-
-// Adicionar certificado com arquivo
 async function addCertificateWithFile() {
   const name = document.getElementById('new-cert-name').value;
   const issuer = document.getElementById('new-cert-issuer').value;
@@ -356,14 +305,14 @@ async function addCertificateWithFile() {
   const file = fileInput.files[0];
   
   if (!name || !issuer || !date) {
-    alert('Preencha todos os campos do certificado!');
+    alert('Preencha todos os campos!');
     return;
   }
   
   let fileUrl = null;
   
   if (file) {
-    showMessage('Fazendo upload do certificado...');
+    showMessage('Fazendo upload...');
     
     const fileExt = file.name.split('.').pop();
     const fileName = `cert-${Date.now()}.${fileExt}`;
@@ -373,8 +322,7 @@ async function addCertificateWithFile() {
       .upload(fileName, file);
     
     if (error) {
-      console.error('Erro no upload:', error);
-      showMessage('Erro ao fazer upload do arquivo');
+      showMessage('Erro no upload');
       return;
     }
     
@@ -385,30 +333,223 @@ async function addCertificateWithFile() {
     fileUrl = publicUrl;
   }
   
-  // Salvar certificado no banco
   const { error } = await supabaseAdmin
     .from('certificates')
-    .insert({ 
-      name, 
-      issuer, 
-      date, 
-      image_url: fileUrl 
-    });
+    .insert({ name, issuer, date, image_url: fileUrl });
   
   if (error) {
-    console.error('Erro ao salvar certificado:', error);
-    showMessage('Erro ao salvar certificado');
+    showMessage('Erro ao salvar');
   } else {
-    showMessage('✅ Certificado adicionado com sucesso!');
-    
-    // Limpar formulário
+    showMessage('✅ Certificado adicionado!');
     document.getElementById('new-cert-name').value = '';
     document.getElementById('new-cert-issuer').value = '';
     document.getElementById('new-cert-date').value = '';
     document.getElementById('cert-file-upload').value = '';
-    
-    // Recarregar lista
     await loadCertificatesData();
+  }
+}
+
+// ==========================================
+// EDITOR DE IMAGEM
+// ==========================================
+
+document.getElementById('avatar-upload')?.addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file) {
+    currentImageFile = file;
+    const reader = new FileReader();
+    reader.onload = function(e) {
+      const preview = document.getElementById('profile-preview');
+      const editorImg = document.getElementById('editor-image');
+      preview.src = e.target.result;
+      editorImg.src = e.target.result;
+      preview.style.display = 'block';
+    };
+    reader.readAsDataURL(file);
+  }
+});
+
+function openImageEditor() {
+  const preview = document.getElementById('profile-preview');
+  if (!preview.src || preview.src === window.location.href) {
+    alert('Selecione uma foto primeiro!');
+    return;
+  }
+  document.getElementById('image-editor').style.display = 'flex';
+  
+  document.getElementById('zoom-slider').oninput = function() {
+    document.getElementById('zoom-value').textContent = this.value;
+    applyImageAdjustments();
+  };
+  document.getElementById('rotate-slider').oninput = function() {
+    document.getElementById('rotate-value').textContent = this.value;
+    applyImageAdjustments();
+  };
+}
+
+function closeImageEditor() {
+  document.getElementById('image-editor').style.display = 'none';
+}
+
+function applyImageAdjustments() {
+  const zoom = document.getElementById('zoom-slider').value / 100;
+  const rotate = document.getElementById('rotate-slider').value;
+  
+  const img = document.getElementById('editor-image');
+  const canvas = document.createElement('canvas');
+  const ctx = canvas.getContext('2d');
+  
+  canvas.width = img.naturalWidth * zoom;
+  canvas.height = img.naturalHeight * zoom;
+  
+  ctx.translate(canvas.width/2, canvas.height/2);
+  ctx.rotate(rotate * Math.PI/180);
+  ctx.drawImage(img, -img.naturalWidth*zoom/2, -img.naturalHeight*zoom/2, img.naturalWidth*zoom, img.naturalHeight*zoom);
+  
+  img.src = canvas.toDataURL('image/jpeg', 0.9);
+  
+  canvas.toBlob((blob) => {
+    adjustedImageBlob = blob;
+  }, 'image/jpeg', 0.9);
+}
+
+async function uploadAvatar() {
+  let fileToUpload = currentImageFile;
+  
+  if (adjustedImageBlob) {
+    fileToUpload = new File([adjustedImageBlob], 'avatar-adjusted.jpg', { type: 'image/jpeg' });
+  }
+  
+  if (!fileToUpload) {
+    alert('Selecione uma imagem!');
+    return;
+  }
+  
+  showMessage('Fazendo upload...');
+  
+  const fileName = `avatar-${Date.now()}.jpg`;
+  
+  const { data, error } = await supabaseAdmin.storage.from('avatars').upload(fileName, fileToUpload);
+  
+  if (error) {
+    showMessage('Erro no upload');
+    return;
+  }
+  
+  const { data: { publicUrl } } = supabaseAdmin.storage.from('avatars').getPublicUrl(fileName);
+  
+  await supabaseAdmin.from('profile').update({ avatar_url: publicUrl }).eq('id', 1);
+  
+  showMessage('✅ Foto salva com sucesso!');
+  closeImageEditor();
+  adjustedImageBlob = null;
+}
+
+// ==========================================
+// GERENCIAR PROJETOS
+// ==========================================
+
+async function loadProjectsData() {
+  const { data } = await supabaseAdmin.from('projects').select('*').order('featured', { ascending: false });
+  if (data) {
+    projects = data;
+    renderProjects();
+  }
+}
+
+function renderProjects() {
+  const container = document.getElementById('projects-list-admin');
+  if (container) {
+    container.innerHTML = projects.map(p => `
+      <div style="background: var(--bg); padding: 15px; margin-bottom: 15px; border-radius: 8px;">
+        <input type="text" value="${p.title}" onchange="updateProject(${p.id}, 'title', this.value)" style="width: 100%; margin-bottom: 10px; background: var(--bg2); border: 1px solid var(--border); padding: 8px; border-radius: 6px; color: var(--text);">
+        <textarea onchange="updateProject(${p.id}, 'description', this.value)" style="width: 100%; margin-bottom: 10px; background: var(--bg2); border: 1px solid var(--border); padding: 8px; border-radius: 6px; color: var(--text);">${p.description}</textarea>
+        <div style="margin-bottom: 10px;">
+          ${(p.technologies || []).map((t, i) => `<span class="tech-tag">${t} <button onclick="removeTech(${p.id}, ${i})" style="background: none; border: none; color: white; cursor: pointer;">×</button></span>`).join('')}
+          <button onclick="addTech(${p.id})" style="background: none; border: 1px dashed var(--accent); color: var(--accent); padding: 2px 8px; border-radius: 4px; margin-left: 5px;">+</button>
+        </div>
+        <div style="margin-bottom: 10px;">
+          <label style="color: var(--text-muted);">
+            <input type="checkbox" ${p.featured ? 'checked' : ''} onchange="updateProject(${p.id}, 'featured', this.checked)"> Destacar projeto
+          </label>
+        </div>
+        <button onclick="deleteProject(${p.id})" style="background: var(--accent3); border: none; color: white; padding: 8px 16px; border-radius: 6px; cursor: pointer;">🗑️ Remover</button>
+      </div>
+    `).join('');
+  }
+}
+
+async function addProject() {
+  const title = document.getElementById('new-project-title').value;
+  const description = document.getElementById('new-project-desc').value;
+  const techs = document.getElementById('new-project-techs').value.split(',').map(t => t.trim()).filter(t => t);
+  const project_url = document.getElementById('new-project-url').value;
+  const github_url = document.getElementById('new-project-github').value;
+  const featured = document.getElementById('new-project-featured').checked;
+  const imageFile = document.getElementById('new-project-image').files[0];
+  
+  if (!title || !description) {
+    alert('Título e descrição são obrigatórios!');
+    return;
+  }
+  
+  let image_url = null;
+  
+  if (imageFile) {
+    showMessage('Fazendo upload da imagem...');
+    const fileExt = imageFile.name.split('.').pop();
+    const fileName = `project-${Date.now()}.${fileExt}`;
+    await supabaseAdmin.storage.from('projects').upload(fileName, imageFile);
+    const { data: { publicUrl } } = supabaseAdmin.storage.from('projects').getPublicUrl(fileName);
+    image_url = publicUrl;
+  }
+  
+  await supabaseAdmin.from('projects').insert({
+    title, description, technologies: techs, project_url, github_url, image_url, featured
+  });
+  
+  showMessage('✅ Projeto adicionado!');
+  document.getElementById('new-project-title').value = '';
+  document.getElementById('new-project-desc').value = '';
+  document.getElementById('new-project-techs').value = '';
+  document.getElementById('new-project-url').value = '';
+  document.getElementById('new-project-github').value = '';
+  document.getElementById('new-project-image').value = '';
+  document.getElementById('new-project-featured').checked = false;
+  
+  await loadProjectsData();
+}
+
+async function updateProject(id, field, value) {
+  await supabaseAdmin.from('projects').update({ [field]: value }).eq('id', id);
+}
+
+async function deleteProject(id) {
+  if (confirm('Remover este projeto?')) {
+    await supabaseAdmin.from('projects').delete().eq('id', id);
+    await loadProjectsData();
+  }
+}
+
+async function removeTech(projectId, techIndex) {
+  const project = projects.find(p => p.id === projectId);
+  if (project) {
+    const techs = [...project.technologies];
+    techs.splice(techIndex, 1);
+    await supabaseAdmin.from('projects').update({ technologies: techs }).eq('id', projectId);
+    await loadProjectsData();
+  }
+}
+
+async function addTech(projectId) {
+  const tech = prompt('Nome da tecnologia:');
+  if (tech) {
+    const project = projects.find(p => p.id === projectId);
+    if (project) {
+      const techs = [...(project.technologies || []), tech];
+      await supabaseAdmin.from('projects').update({ technologies: techs }).eq('id', projectId);
+      await loadProjectsData();
+    }
   }
 }
 
@@ -434,13 +575,22 @@ window.addStat = addStat;
 window.updateCertificate = updateCertificate;
 window.deleteCertificate = deleteCertificate;
 window.addCertificate = addCertificate;
+window.addCertificateWithFile = addCertificateWithFile;
 window.saveProfile = saveProfile;
 window.saveContacts = saveContacts;
 window.saveSkills = saveSkills;
 window.saveStats = saveStats;
 window.saveCertificates = saveCertificates;
+window.saveProjects = saveProjects;
+window.openImageEditor = openImageEditor;
+window.closeImageEditor = closeImageEditor;
+window.applyImageAdjustments = applyImageAdjustments;
 window.uploadAvatar = uploadAvatar;
-window.addCertificateWithFile = addCertificateWithFile;
+window.addProject = addProject;
+window.updateProject = updateProject;
+window.deleteProject = deleteProject;
+window.removeTech = removeTech;
+window.addTech = addTech;
 
 // Inicializar
 checkSession();

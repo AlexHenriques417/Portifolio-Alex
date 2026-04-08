@@ -15,6 +15,7 @@
   <ul class="nav-links">
     <li><a href="#sobre">Sobre</a></li>
     <li><a href="#skills">Skills</a></li>
+    <li><a href="#projetos">Projetos</a></li>
     <li><a href="#certificados">Certificados</a></li>
     <li><a href="#contato">Contato</a></li>
   </ul>
@@ -45,7 +46,7 @@
 
     <div class="hero-actions">
       <a href="#contato" class="btn-primary">✉ Entrar em contato</a>
-      <a href="#certificados" class="btn-ghost">📄 Ver certificados</a>
+      <a href="#projetos" class="btn-ghost">🚀 Ver projetos</a>
     </div>
 
     <div class="hero-stats" id="hero-stats"></div>
@@ -124,6 +125,15 @@
   </div>
 </section>
 
+<!-- PROJETOS (NOVO) -->
+<section id="projetos">
+  <div class="section-label reveal">Portfólio</div>
+  <h2 class="section-title reveal">Projetos em<br>Destaque</h2>
+  <p class="section-subtitle reveal">Conheça alguns dos projetos que desenvolvi.</p>
+
+  <div class="projects-grid" id="projects-grid"></div>
+</section>
+
 <!-- CERTIFICADOS -->
 <section id="certificados">
   <div class="section-label reveal">Conquistas</div>
@@ -172,19 +182,21 @@
 
   <div class="reveal">
     <h3 style="font-family:'Poppins',sans-serif; font-size:1.2rem; font-weight:700; margin-bottom:1.5rem;">Envie uma mensagem</h3>
-    <div class="form-group">
-      <label class="form-label">Seu nome</label>
-      <input type="text" class="form-input" placeholder="Como devo te chamar?" id="form-name"/>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Email</label>
-      <input type="email" class="form-input" placeholder="seu@email.com" id="form-email"/>
-    </div>
-    <div class="form-group">
-      <label class="form-label">Mensagem</label>
-      <textarea class="form-textarea" placeholder="Olá! Gostaria de conversar sobre..." id="form-message"></textarea>
-    </div>
-    <button class="form-submit" onclick="sendMessage()">✉ Enviar mensagem</button>
+    <form id="contact-form" onsubmit="sendMessage(event)">
+      <div class="form-group">
+        <label class="form-label">Seu nome</label>
+        <input type="text" name="name" class="form-input" placeholder="Como devo te chamar?" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input type="email" name="email" class="form-input" placeholder="seu@email.com" required/>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mensagem</label>
+        <textarea name="message" class="form-textarea" placeholder="Olá! Gostaria de conversar sobre..." required></textarea>
+      </div>
+      <button type="submit" class="form-submit">✉ Enviar mensagem</button>
+    </form>
   </div>
 </section>
 
@@ -201,7 +213,7 @@
   </div>
 </footer>
 
-<!-- Modal -->
+<!-- Modal para Certificados -->
 <div class="modal-overlay" id="modal-overlay" onclick="closeModal()">
   <div class="modal-box" onclick="event.stopPropagation()">
     <button class="modal-close" onclick="closeModal()">✕</button>

@@ -7,178 +7,24 @@
   <link rel="stylesheet" href="css/style.css">
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <style>
-    .admin-container {
-      max-width: 1200px;
-      margin: 100px auto 50px;
-      padding: 0 20px;
-    }
-    
-    .admin-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 30px;
-    }
-    
-    .admin-title {
-      font-family: 'Poppins', sans-serif;
-      font-size: 2rem;
-      font-weight: 800;
-      color: var(--text);
-    }
-    
-    .logout-btn {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      color: var(--text-muted);
-      padding: 10px 20px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-family: 'Poppins', sans-serif;
-      transition: all 0.3s;
-    }
-    
-    .logout-btn:hover {
-      border-color: var(--accent3);
-      color: var(--accent3);
-    }
-    
-    .admin-section {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 30px;
-      margin-bottom: 30px;
-    }
-    
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-    }
-    
-    .section-header h2 {
-      font-family: 'Poppins', sans-serif;
-      font-size: 1.5rem;
-      font-weight: 700;
-    }
-    
-    .edit-btn {
-      background: linear-gradient(135deg, var(--accent2), var(--accent));
-      border: none;
-      color: white;
-      padding: 10px 20px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-family: 'Poppins', sans-serif;
-      font-size: 0.9rem;
-      transition: transform 0.2s;
-    }
-    
-    .edit-btn:hover {
-      transform: translateY(-2px);
-    }
-    
-    .form-group {
-      margin-bottom: 20px;
-    }
-    
-    .form-group label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--text-muted);
-      font-size: 0.9rem;
-    }
-    
-    .form-group input,
-    .form-group textarea {
-      width: 100%;
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 12px;
-      color: var(--text);
-      font-family: 'Poppins', sans-serif;
-    }
-    
-    .skills-list {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 20px;
-    }
-    
-    .skill-item {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 20px;
-      padding: 8px 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-    
-    .skill-item button {
-      background: none;
-      border: none;
-      color: var(--accent3);
-      cursor: pointer;
-      font-size: 18px;
-    }
-    
-    .add-btn {
-      background: transparent;
-      border: 1px dashed var(--accent);
-      color: var(--accent);
-      padding: 10px 20px;
-      border-radius: 20px;
-      cursor: pointer;
-      margin-top: 20px;
-      font-family: 'Poppins', sans-serif;
-    }
-    
-    .cert-item {
-      background: var(--bg);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 15px;
-      margin-bottom: 10px;
-    }
-    
-    .success-message {
-      background: rgba(0,200,83,0.1);
-      border: 1px solid #00c853;
-      color: #00c853;
-      padding: 10px;
-      border-radius: 6px;
-      margin-bottom: 20px;
-      display: none;
-    }
-    
-    .login-container {
-      max-width: 400px;
-      margin: 200px auto;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      padding: 40px;
-    }
-    
-    .login-container h2 {
-      font-family: 'Poppins', sans-serif;
-      margin-bottom: 30px;
-      text-align: center;
-    }
-    
-    .avatar-preview {
-      width: 100px;
-      height: 100px;
-      border-radius: 50%;
-      object-fit: cover;
-      background: var(--bg);
-      border: 2px solid var(--border);
-    }
+    .admin-container { max-width: 1200px; margin: 100px auto 50px; padding: 0 20px; }
+    .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+    .admin-title { font-family: 'Poppins', sans-serif; font-size: 2rem; font-weight: 800; color: var(--text); }
+    .logout-btn { background: var(--surface); border: 1px solid var(--border); color: var(--text-muted); padding: 10px 20px; border-radius: 8px; cursor: pointer; }
+    .admin-section { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 30px; margin-bottom: 30px; }
+    .section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .edit-btn { background: linear-gradient(135deg, var(--accent2), var(--accent)); border: none; color: white; padding: 10px 20px; border-radius: 6px; cursor: pointer; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; color: var(--text-muted); }
+    .form-group input, .form-group textarea, .form-group select { width: 100%; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; padding: 12px; color: var(--text); }
+    .tech-tag { display: inline-block; background: var(--accent2); color: white; padding: 5px 10px; border-radius: 4px; margin: 5px; font-size: 0.8rem; }
+    .tech-input-container { display: flex; gap: 10px; margin-top: 10px; }
+    .login-container { max-width: 400px; margin: 200px auto; background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 40px; }
+    .avatar-preview { width: 150px; height: 150px; border-radius: 8px; object-fit: cover; border: 2px solid var(--border); cursor: pointer; }
+    .image-editor { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.9); z-index: 9999; display: none; align-items: center; justify-content: center; }
+    .editor-container { max-width: 500px; background: var(--surface); padding: 30px; border-radius: 12px; }
+    .editor-preview { max-width: 300px; max-height: 300px; margin: 20px auto; }
+    .range-slider { width: 100%; margin: 20px 0; }
   </style>
 </head>
 <body>
@@ -187,11 +33,11 @@
   <h2>Área Administrativa</h2>
   <div class="form-group">
     <label>Email</label>
-    <input type="email" id="login-email" placeholder="seu@email.com" value="alexhenriques417@gmail.com">
+    <input type="email" id="login-email" value="alexhenriques417@gmail.com">
   </div>
   <div class="form-group">
     <label>Senha</label>
-    <input type="password" id="login-password" placeholder="••••••••">
+    <input type="password" id="login-password">
   </div>
   <button class="edit-btn" onclick="login()" style="width: 100%;">Entrar</button>
 </div>
@@ -202,36 +48,39 @@
     <button class="logout-btn" onclick="logout()">Sair</button>
   </div>
   
-  <div id="success-message" class="success-message"></div>
+  <div id="success-message" class="success-message" style="display: none;"></div>
   
   <!-- Perfil -->
   <div class="admin-section">
     <div class="section-header">
       <h2>Perfil</h2>
-      <button class="edit-btn" onclick="saveProfile()">Salvar Alterações</button>
+      <button class="edit-btn" onclick="saveProfile()">Salvar</button>
     </div>
     <div class="form-group">
       <label>Nome</label>
       <input type="text" id="edit-name" value="Alex Henriques">
     </div>
     <div class="form-group">
-      <label>Título Profissional</label>
+      <label>Título</label>
       <input type="text" id="edit-title" value="Desenvolvedor">
     </div>
     <div class="form-group">
       <label>Biografia</label>
-      <textarea id="edit-bio" rows="4">Profissional apaixonado por tecnologia e desenvolvimento.</textarea>
+      <textarea id="edit-bio" rows="4"></textarea>
     </div>
     
-    <!-- UPLOAD DE FOTO -->
+    <!-- UPLOAD DE FOTO COM AJUSTE -->
     <div class="form-group">
       <label>Foto de Perfil</label>
-      <div style="display: flex; align-items: center; gap: 20px;">
-        <img id="profile-preview" class="avatar-preview" style="display: none;">
+      <div style="display: flex; gap: 20px; align-items: start;">
         <div>
+          <img id="profile-preview" class="avatar-preview" style="display: none;" onclick="openImageEditor()">
           <input type="file" id="avatar-upload" accept="image/*" style="display: none;">
-          <button type="button" onclick="document.getElementById('avatar-upload').click()" class="edit-btn" style="padding: 8px 16px;">📸 Escolher Foto</button>
-          <button type="button" onclick="uploadAvatar()" class="edit-btn" style="padding: 8px 16px; margin-left: 10px;">⬆️ Fazer Upload</button>
+        </div>
+        <div>
+          <button onclick="document.getElementById('avatar-upload').click()" class="edit-btn">📸 Escolher Foto</button>
+          <button onclick="openImageEditor()" class="edit-btn" style="margin-left: 10px;">✂️ Ajustar Foto</button>
+          <button onclick="uploadAvatar()" class="edit-btn" style="margin-left: 10px;">⬆️ Salvar Foto</button>
         </div>
       </div>
     </div>
@@ -241,83 +90,77 @@
   <div class="admin-section">
     <div class="section-header">
       <h2>Contatos</h2>
-      <button class="edit-btn" onclick="saveContacts()">Salvar Contatos</button>
+      <button class="edit-btn" onclick="saveContacts()">Salvar</button>
     </div>
-    <div class="form-group">
-      <label>Email</label>
-      <input type="email" id="edit-email" value="alexhenriques417@gmail.com">
-    </div>
-    <div class="form-group">
-      <label>Telefone</label>
-      <input type="text" id="edit-phone" value="(83)99608-0118">
-    </div>
-    <div class="form-group">
-      <label>GitHub</label>
-      <input type="text" id="edit-github" value="https://github.com/AlexHenriques417">
-    </div>
-    <div class="form-group">
-      <label>LinkedIn</label>
-      <input type="text" id="edit-linkedin" value="https://www.linkedin.com/in/alex-henriques417/">
-    </div>
+    <div class="form-group"><label>Email</label><input type="email" id="edit-email"></div>
+    <div class="form-group"><label>Telefone</label><input type="text" id="edit-phone"></div>
+    <div class="form-group"><label>GitHub</label><input type="text" id="edit-github"></div>
+    <div class="form-group"><label>LinkedIn</label><input type="text" id="edit-linkedin"></div>
   </div>
   
-  <!-- Habilidades -->
+  <!-- Projetos -->
   <div class="admin-section">
     <div class="section-header">
-      <h2>Habilidades</h2>
-      <button class="edit-btn" onclick="saveSkills()">Salvar Habilidades</button>
-    </div>
-    <h3>Soft Skills</h3>
-    <div id="soft-skills-list" class="skills-list"></div>
-    <button class="add-btn" onclick="addSoftSkill()">+ Adicionar Soft Skill</button>
-    
-    <h3 style="margin-top: 30px;">Hard Skills</h3>
-    <div id="hard-skills-list-admin"></div>
-    <button class="add-btn" onclick="addHardSkill()">+ Adicionar Hard Skill</button>
-  </div>
-  
-  <!-- Estatísticas -->
-  <div class="admin-section">
-    <div class="section-header">
-      <h2>Estatísticas</h2>
-      <button class="edit-btn" onclick="saveStats()">Salvar Estatísticas</button>
-    </div>
-    <div id="stats-list"></div>
-    <button class="add-btn" onclick="addStat()">+ Adicionar Estatística</button>
-  </div>
-  
-  <!-- Certificados -->
-  <div class="admin-section">
-    <div class="section-header">
-      <h2>Certificados</h2>
-      <button class="edit-btn" onclick="saveCertificates()">Salvar Certificados</button>
+      <h2>Projetos</h2>
+      <button class="edit-btn" onclick="saveProjects()">Salvar Todos</button>
     </div>
     
-    <!-- FORMULÁRIO PARA ADICIONAR CERTIFICADO COM ARQUIVO -->
     <div style="background: var(--bg2); padding: 20px; border-radius: 8px; margin-bottom: 30px;">
-      <h3 style="margin-bottom: 20px;">➕ Adicionar Novo Certificado</h3>
+      <h3>➕ Adicionar Novo Projeto</h3>
       <div class="form-group">
-        <label>Nome do Certificado</label>
-        <input type="text" id="new-cert-name" placeholder="Ex: Desenvolvimento Web Completo">
+        <label>Título</label>
+        <input type="text" id="new-project-title">
       </div>
       <div class="form-group">
-        <label>Instituição</label>
-        <input type="text" id="new-cert-issuer" placeholder="Ex: Udemy">
+        <label>Descrição</label>
+        <textarea id="new-project-desc" rows="3"></textarea>
       </div>
       <div class="form-group">
-        <label>Data</label>
-        <input type="text" id="new-cert-date" placeholder="Ex: Jan 2024">
+        <label>Tecnologias (separadas por vírgula)</label>
+        <input type="text" id="new-project-techs" placeholder="React, Node.js, PostgreSQL">
       </div>
       <div class="form-group">
-        <label>Arquivo do Certificado (PDF ou Imagem)</label>
-        <input type="file" id="cert-file-upload" accept=".pdf,image/*" style="background: var(--bg); padding: 10px;">
+        <label>URL do Projeto (opcional)</label>
+        <input type="text" id="new-project-url">
       </div>
-      <button class="edit-btn" onclick="addCertificateWithFile()">📄 Adicionar Certificado</button>
+      <div class="form-group">
+        <label>URL do GitHub (opcional)</label>
+        <input type="text" id="new-project-github">
+      </div>
+      <div class="form-group">
+        <label>Imagem do Projeto</label>
+        <input type="file" id="new-project-image" accept="image/*">
+      </div>
+      <div class="form-group">
+        <label>
+          <input type="checkbox" id="new-project-featured"> Projeto em destaque
+        </label>
+      </div>
+      <button class="edit-btn" onclick="addProject()">Adicionar Projeto</button>
     </div>
     
-    <!-- LISTA DE CERTIFICADOS EXISTENTES -->
-    <h3>Certificados Existentes</h3>
-    <div id="certs-list-admin"></div>
+    <h3>Projetos Existentes</h3>
+    <div id="projects-list-admin"></div>
+  </div>
+  
+  <!-- Habilidades, Estatísticas, Certificados... (mantenha o resto igual) -->
+</div>
+
+<!-- Editor de Imagem -->
+<div class="image-editor" id="image-editor" onclick="closeImageEditor()">
+  <div class="editor-container" onclick="event.stopPropagation()">
+    <h3>Ajustar Foto</h3>
+    <img id="editor-image" class="editor-preview">
+    <div class="form-group">
+      <label>Zoom: <span id="zoom-value">100</span>%</label>
+      <input type="range" id="zoom-slider" class="range-slider" min="50" max="200" value="100">
+    </div>
+    <div class="form-group">
+      <label>Rotação: <span id="rotate-value">0</span>°</label>
+      <input type="range" id="rotate-slider" class="range-slider" min="0" max="360" value="0">
+    </div>
+    <button class="edit-btn" onclick="applyImageAdjustments()">Aplicar Ajustes</button>
+    <button class="edit-btn" onclick="closeImageEditor()" style="margin-left: 10px;">Cancelar</button>
   </div>
 </div>
 
