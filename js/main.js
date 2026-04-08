@@ -2,13 +2,10 @@
 const SUPABASE_URL = 'https://srjhmprdkrjsdvrsrycj.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNyamhtcHJka3Jqc2R2cnNyeWNqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1OTI4ODYsImV4cCI6MjA5MTE2ODg4Nn0.fnZubFVAQbRkaVpxxgIzqFFutalltcxwC4DsgS0TJv4';
 
-// Criar cliente Supabase (apenas UMA vez)
 const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-// Variáveis globais
 let certificates = [];
 
-// Carregar dados ao iniciar
 document.addEventListener('DOMContentLoaded', async () => {
   console.log('🚀 Iniciando carregamento do portfólio...');
   
@@ -24,7 +21,6 @@ document.addEventListener('DOMContentLoaded', async () => {
   console.log('✅ Portfólio carregado com sucesso!');
 });
 
-// Carregar perfil
 async function loadProfile() {
   try {
     const { data, error } = await supabaseClient
@@ -43,13 +39,28 @@ async function loadProfile() {
       document.getElementById('hero-title').textContent = data.title || 'Desenvolvedor';
       document.getElementById('hero-bio').textContent = data.bio || 'Profissional apaixonado por tecnologia.';
       document.getElementById('footer-name').textContent = data.name || 'Alex Henriques';
+      
+      // 🖼️ CARREGAR FOTO DE PERFIL
+      if (data.avatar_url) {
+        const profileImg = document.getElementById('profile-img');
+        const placeholder = document.getElementById('img-placeholder');
+        
+        if (profileImg) {
+          profileImg.src = data.avatar_url;
+          profileImg.classList.add('loaded');
+          profileImg.style.display = 'block';
+          
+          if (placeholder) {
+            placeholder.style.display = 'none';
+          }
+        }
+      }
     }
   } catch (err) {
     console.error('Erro:', err);
   }
 }
 
-// Carregar contatos
 async function loadContacts() {
   try {
     const { data, error } = await supabaseClient
@@ -82,7 +93,6 @@ async function loadContacts() {
   }
 }
 
-// Carregar habilidades
 async function loadSkills() {
   try {
     const { data, error } = await supabaseClient
@@ -126,7 +136,6 @@ async function loadSkills() {
   }
 }
 
-// Carregar estatísticas
 async function loadStats() {
   try {
     const { data, error } = await supabaseClient
@@ -154,7 +163,6 @@ async function loadStats() {
   }
 }
 
-// Carregar certificados
 async function loadCertificates() {
   try {
     const { data, error } = await supabaseClient
@@ -190,7 +198,6 @@ async function loadCertificates() {
   }
 }
 
-// Modal de certificado
 function openModal(index) {
   const cert = certificates[index];
   if (!cert) return;
@@ -198,11 +205,25 @@ function openModal(index) {
   document.getElementById('modal-title').textContent = cert.name;
   document.getElementById('modal-issuer').textContent = cert.issuer;
   
-  const content = cert.image_url 
-    ? `<img class="modal-img" src="${cert.image_url}" alt="${cert.name}"/>`
-    : `<div class="modal-placeholder">Certificado disponível mediante solicitação</div>`;
+  // Verificar o tipo de arquivo
+  if (cert.image_url) {
+    const fileExt = cert.image_url.split('.').pop().toLowerCase();
+    
+    if (fileExt === 'pdf') {
+      document.getElementById('modal-content').innerHTML = `
+        <embed src="${cert.image_url}" type="application/pdf" width="100%" height="500px" />
+      `;
+    } else {
+      document.getElementById('modal-content').innerHTML = `
+        <img class="modal-img" src="${cert.image_url}" alt="${cert.name}"/>
+      `;
+    }
+  } else {
+    document.getElementById('modal-content').innerHTML = `
+      <div class="modal-placeholder">Certificado disponível mediante solicitação</div>
+    `;
+  }
   
-  document.getElementById('modal-content').innerHTML = content;
   document.getElementById('modal-overlay').classList.add('open');
 }
 
@@ -210,7 +231,6 @@ function closeModal() {
   document.getElementById('modal-overlay').classList.remove('open');
 }
 
-// Enviar mensagem
 function sendMessage() {
   const name = document.getElementById('form-name').value;
   const email = document.getElementById('form-email').value;
@@ -234,7 +254,6 @@ function sendMessage() {
   }, 3000);
 }
 
-// Efeito de digitação
 function initTypedEffect() {
   const roles = ['Desenvolvedor 💻', 'Analista de Dados 📊', 'Profissional de TI ⚙️'];
   let ri = 0, ci = 0, deleting = false;
@@ -258,7 +277,6 @@ function initTypedEffect() {
   type();
 }
 
-// Reveal on scroll
 function initReveal() {
   const obs = new IntersectionObserver(entries => {
     entries.forEach(e => { 
@@ -269,12 +287,10 @@ function initReveal() {
   document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 }
 
-// Fechar modal com ESC
 document.addEventListener('keydown', e => {
   if (e.key === 'Escape') closeModal();
 });
 
-// Expor funções globalmente
 window.openModal = openModal;
 window.closeModal = closeModal;
 window.sendMessage = sendMessage;
