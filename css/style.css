@@ -421,38 +421,82 @@ section {
   display: flex; 
   flex-direction: column; 
   align-items: center; 
-  justify-content: center;
   gap: 1rem;
   color: var(--text-muted);
-  width: 100%;
-  height: 100%;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 1;
 }
 
-.about-img-placeholder i {
-  font-size: 64px;
-  opacity: 0.4;
+.about-img-placeholder svg { 
+  width: 64px; 
+  height: 64px; 
+  opacity: .4; 
 }
 
 .about-img-placeholder p { 
-  font-size: 0.9rem; 
-  opacity: 0.6; 
+  font-size: .82rem; 
+  opacity: .6; 
 }
 
-#profile-img {
+.about-img-frame img {
   width: 100%; 
   height: 100%; 
   object-fit: cover;
   display: none;
-  position: relative;
-  z-index: 2;
 }
 
-#profile-img.loaded { 
+.about-img-frame img.loaded { 
   display: block; 
+}
+
+.about-deco {
+  position: absolute;
+  bottom: -18px; 
+  right: -18px;
+  width: 120px; 
+  height: 120px;
+  border: 2px solid var(--accent2);
+  border-radius: 8px;
+  z-index: -1;
+  opacity: .5;
+}
+
+.about-badge {
+  position: absolute;
+  bottom: 1.5rem; 
+  left: -1.5rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: .75rem 1rem;
+  display: flex; 
+  align-items: center; 
+  gap: .75rem;
+  box-shadow: var(--glow);
+  white-space: nowrap;
+}
+
+.badge-icon { 
+  font-size: 1.4rem; 
+}
+
+.badge-text { 
+  font-size: .8rem; 
+}
+
+.badge-text strong { 
+  display: block; 
+  font-family: 'Poppins', sans-serif; 
+  font-size: .92rem; 
+  color: var(--text); 
+}
+
+.about-text p { 
+  color: #8896b3; 
+  margin-bottom: 1rem; 
+}
+
+.about-text p span { 
+  color: var(--text); 
+  font-weight: 500; 
 }
 
 /* SKILLS */
