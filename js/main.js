@@ -26,7 +26,6 @@ async function loadProfile() {
       document.getElementById('hero-title').textContent = data.title || 'Desenvolvedor';
       document.getElementById('hero-bio').textContent = data.bio || '';
       document.getElementById('footer-name').textContent = data.name || 'Alex Henriques';
-      document.getElementById('edit-bio').value = data.bio || '';
       
       if (data.avatar_url) {
         const img = document.getElementById('profile-img');
@@ -39,7 +38,9 @@ async function loadProfile() {
         }
       }
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error('Erro ao carregar perfil:', err);
+  }
 }
 
 async function loadContacts() {
@@ -57,7 +58,9 @@ async function loadContacts() {
       document.getElementById('footer-github').href = data.github;
       document.getElementById('footer-linkedin').href = data.linkedin;
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error('Erro ao carregar contatos:', err);
+  }
 }
 
 async function loadSkills() {
@@ -80,7 +83,9 @@ async function loadSkills() {
         `).join('');
       }
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error('Erro ao carregar skills:', err);
+  }
 }
 
 async function loadStats() {
@@ -94,7 +99,9 @@ async function loadStats() {
         `).join('');
       }
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error('Erro ao carregar stats:', err);
+  }
 }
 
 async function loadProjects() {
@@ -119,7 +126,9 @@ async function loadProjects() {
         `).join('');
       }
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error('Erro ao carregar projetos:', err);
+  }
 }
 
 async function loadCertificates() {
@@ -139,7 +148,9 @@ async function loadCertificates() {
         `).join('');
       }
     }
-  } catch (err) {}
+  } catch (err) {
+    console.error('Erro ao carregar certificados:', err);
+  }
 }
 
 function openModal(index) {
@@ -158,7 +169,9 @@ function openModal(index) {
   document.getElementById('modal-overlay').classList.add('open');
 }
 
-function closeModal() { document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModal() { 
+  document.getElementById('modal-overlay').classList.remove('open'); 
+}
 
 async function sendMessage(event) {
   event.preventDefault();
@@ -182,7 +195,11 @@ async function sendMessage(event) {
   } catch (error) {
     btn.innerHTML = '<i class="fas fa-times"></i> Erro';
   } finally {
-    setTimeout(() => { btn.innerHTML = originalText; btn.style.background = ''; btn.disabled = false; }, 3000);
+    setTimeout(() => { 
+      btn.innerHTML = originalText; 
+      btn.style.background = ''; 
+      btn.disabled = false; 
+    }, 3000);
   }
 }
 
