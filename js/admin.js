@@ -116,7 +116,42 @@ function renderStats() {
 
 async function loadCertificatesData() {
   const { data } = await supabaseAdmin.from('certificates').select('*');
-  if (data) { certificates = data; renderCertificates(); }
+  if (data) {
+    // Ordenar por data (do mais recente para o mais antigo)
+    certificates = data.sort((a, b) => {
+      function parseDate(dateStr) {
+        const months = {
+          'jan': 1, 'fev': 2, 'mar': 3, 'abr': 4, 'mai': 5, 'jun': 6,
+          'jul': 7, 'ago': 8, 'set': 9, 'out': 10, 'nov': 11, 'dez': 12,
+          'january': 1, 'february': 2, 'march': 3, 'april': 4, 'may': 5, 'june': 6,
+          'july': 7, 'august': 8, 'september': 9, 'october': 10, 'november': 11, 'december': 12
+        };
+        
+        const parts = dateStr.toLowerCase().trim().split(/[\s,]+/);
+        let month, year;
+        
+        for (let part of parts) {
+          if (months[part]) {
+            month = months[part];
+          } else if (/^\d{4}$/.test(part)) {
+            year = parseInt(part);
+          }
+        }
+        
+        if (month && year) {
+          return new Date(year, month - 1);
+        }
+        return new Date(0);
+      }
+      
+      const dateA = parseDate(a.date);
+      const dateB = parseDate(b.date);
+      
+      return dateB - dateA;
+    });
+    
+    renderCertificates();
+  }
 }
 
 function renderCertificates() {
